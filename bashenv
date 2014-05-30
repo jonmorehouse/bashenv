@@ -1,0 +1,38 @@
+#!/bin/bash
+# this script should be called with \. load_export_file so that it will act on the current environment -- and not create a child process
+
+# make this script callable from anywhere!
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# note include functionality
+if [ -f $1 ]
+then
+	# loop through and export the file as needed
+	# remove all comments and empty lines before hand
+	awk 'NF' $1 | grep -v \# | while read line 
+	do
+		# check to see if its an include script!
+		if [[ $line =~ include* ]]
+		then
+			# if so then recursively call with the correct file
+			file=`echo $line | awk '{ split($0, a, " "); print a[2] }'`
+
+			# check if the filename was found and make sure it exists!
+			if [[ (-n $file) && -f $file  ]]
+			then
+				# now recursively call the load function
+				\. $0 $file
+			else
+				# print message 
+				echo "Include not found for: $file" 
+			fi
+		else
+			# export the variable accordingly!
+			eval "export $line"
+		fi
+	done
+fi
+
+# clean up after our selves
+DIR=
+
