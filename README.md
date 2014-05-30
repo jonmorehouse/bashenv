@@ -3,13 +3,13 @@
 
 ## Features
 
-* export env files to current environment 
+Export env files to current environment 
 ~~~ bash
 $ \. bashenv
 $ \. bashenv mac.env
 ~~~
 
-* print out environment variables
+Print out environment variables
 ~~~
 $ bashenv 
 $ bashenv | some_script_that_reads_env
