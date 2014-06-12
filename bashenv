@@ -17,10 +17,11 @@ do
   then
     # if so then recursively call with the correct file
     file=`echo $line | awk '{ split($0, a, " "); print a[2] }'`
+    # force expansion of file
+    eval file=$file
 
     # try to load the include directive
-    if [[ (-n $file) && -f $file  ]]
-    then
+    if [[ -e "$file" ]];then
       # recursively load this file
       \. $0 $file
     else
